@@ -1,3 +1,3 @@
-fun sum(lists: List<List<Int>>) : List<Int>{
+fun sum(lists: List<List<Int>>): List<Int> {
     TODO()
 }
