@@ -1,12 +1,19 @@
 @file:Suppress("unused", "UNCHECKED_CAST", "SameParameterValue", "ObjectPropertyName")
 
 import clojure.lang.*
+import java.lang.UnsupportedOperationException
 
 fun correctSum(args: List<List<Int>>): List<Int> {
     if (args.isEmpty()) return listOf()
-    val application = apply(partial(mapv, `+`) as IFn, args.toTypedArray()) as PersistentVector
-    return asList(application.seq(), 0L).map { it.toInt() }
+    return apply(mapv, `+`, args)
+        .toList(0L).map { it.toInt() }
 }
+
+private fun <T> Any.toList(junk: T): List<T> =
+    when (this) {
+        is PersistentVector -> asList(this.seq(), junk) // TO DO
+        else -> throw UnsupportedOperationException()
+    }
 
 private fun <T> asList(solution: ISeq?, junk: T) = Iterable {
     object : Iterator<T> {
@@ -548,4 +555,3 @@ private val parse_double = resolve<IFn>("parse-double")
 private val parse_boolean = resolve<IFn>("parse-boolean")
 private val NaN7 = resolve<IFn>("NaN?")
 private val infinite7 = resolve<IFn>("infinite?")
-

@@ -1,5 +1,3 @@
-@file:Suppress("DuplicatedCode")
-
 import java.io.File
 import java.util.Random
 import kotlin.math.roundToLong
@@ -20,7 +18,6 @@ fun main() = TestsUtil().run {
             repeat(100) {
                 val input = List(rnd.nextInt(5)) { List(rnd.nextInt(5)) { rnd.nextInt(-10, 10) } }
                 compare(::correctSum, ::sum, input, "sum")
-
             }
         }
         testGroup("Random heavy", listOf("Manual", "Random light")) {
@@ -61,4 +58,3 @@ fun main() = TestsUtil().run {
     )
 
 }
-

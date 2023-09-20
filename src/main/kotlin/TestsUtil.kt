@@ -45,11 +45,8 @@ class TestsUtil {
                 if (runnable()) {
                     results[blockName!! to groupName!!] = (results[blockName to groupName] ?: 0) + 1
                 }
-            } catch (e: Exception) {
-                println("Unexpected Exception ${e.javaClass} : ${e.message}")
-                e.printStackTrace()
-            } catch (e: AssertionError) {
-                println("Unexpected AssertionError : ${e.message}")
+            } catch (e: Throwable) {
+                println("Unexpected ${e.javaClass} : ${e.message}")
                 e.printStackTrace()
             }
         }
@@ -113,7 +110,7 @@ class TestsUtil {
     fun <A, B, C, R> compare(
         correct: (A, B, C) -> R,
         tested: (A, B, C) -> R,
-        a: A,        b: B,        c: C,
+        a: A, b: B, c: C,
         funcName: String,
         silentArgs: Boolean = false,
         silentRes: Boolean = false
