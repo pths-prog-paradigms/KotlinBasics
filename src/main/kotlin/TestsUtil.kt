@@ -1,9 +1,11 @@
-import java.lang.AssertionError
+@file:Suppress("unused")
 
 class TestsUtil {
+    val ignoreStackSince = Thread.getAllStackTraces()[Thread.currentThread()]!!
+        .run { this[size - 2].className + "$" + this[4].methodName + "$" }
     val results = mutableMapOf<Pair<String, String>, Int>()
     val total = mutableMapOf<Pair<String, String>, Int>()
-    var indent = 0;
+    var indent = 0
     fun println(x: Any?) {
         kotlin.io.println("    ".repeat(indent) + x)
     }
@@ -38,6 +40,8 @@ class TestsUtil {
         groupName = null
     }
 
+    private val stackTraces = mutableListOf<List<StackTraceElement>>()
+
     private fun test(runnable: () -> Boolean) {
         total[blockName!! to groupName!!] = (total[blockName to groupName] ?: 0) + 1
         if (!suppressTesting) {
@@ -46,8 +50,12 @@ class TestsUtil {
                     results[blockName!! to groupName!!] = (results[blockName to groupName] ?: 0) + 1
                 }
             } catch (e: Throwable) {
-                println("Unexpected ${e.javaClass} : ${e.message}")
-                e.printStackTrace()
+                println("Unexpected ${e.javaClass.name} : ${e.message}")
+                val important = e.stackTrace.takeWhile { !it.className.startsWith(ignoreStackSince) }
+                if (important !in stackTraces) {
+                    e.printStackTrace(System.out)
+                    stackTraces.add(important)
+                }
             }
         }
     }
